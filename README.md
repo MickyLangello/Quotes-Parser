@@ -1,6 +1,6 @@
 # Quotes Tracker
 
-[![Daily quotes scrape](https://github.com/OWNER/REPO/actions/workflows/scrape.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/scrape.yml)
+[![Daily quotes scrape](https://github.com/MickyLangello/Quotes-Parser/actions/workflows/scrape.yml/badge.svg)](https://github.com/MickyLangello/Quotes-Parser/actions/workflows/scrape.yml)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
 ![uv](https://img.shields.io/badge/managed%20with-uv-de5fe9)
 ![License](https://img.shields.io/badge/license-MIT-green)
