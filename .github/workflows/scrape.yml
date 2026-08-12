@@ -1,0 +1,51 @@
+name: Daily quotes scrape
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "pyproject.toml"
+      - ".github/workflows/scrape.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: scrape-and-publish
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --frozen --no-dev
+
+      - name: Run scraper
+        run: uv run python src/scraper.py
+
+      - name: Build Pages HTML
+        run: uv run python src/build_page.py
+
+      - name: Run tests
+        run: uv run --group dev pytest -q
+
+      - name: Commit updated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/quotes.csv docs/index.html
+          git diff --cached --quiet && echo "Нет изменений" || git commit -m "chore: обновление данных $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push
